@@ -114,7 +114,7 @@ else:
 
 st.write("Загрузите ваш Excel-файл для обработки:")
 
-# Загрузка только целевого файла
+# Загрузка целевого файла
 input_file = st.file_uploader("Выберите Excel-файл (.xlsx)", type=['xlsx'])
 
 if input_file is not None:
@@ -135,13 +135,18 @@ if input_file is not None:
                     df.to_excel(writer, header=False, index=False)
                 processed_data = output.getvalue()
                 
+                # === Генерируем новое имя файла на основе исходного ===
+                original_name = input_file.name
+                base_name, ext = os.path.splitext(original_name)
+                new_file_name = f"{base_name}_with_transcriptions{ext}"
+                
                 st.success("✨ Готово! Файл успешно обработан.")
                 
-                # Кнопка для скачивания
+                # Кнопка для скачивания с новым умным именем
                 st.download_button(
                     label="📥 Скачать готовый файл",
                     data=processed_data,
-                    file_name="with_transcriptions.xlsx",
+                    file_name=new_file_name,
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
             except Exception as e:
